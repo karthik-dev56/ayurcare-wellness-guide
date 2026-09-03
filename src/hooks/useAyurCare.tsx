@@ -29,7 +29,10 @@ interface AyurCareState {
   historyError: boolean;
   sending: boolean;
   sendError: boolean;
+  signingIn: boolean;
+  signInError: boolean;
   signIn: () => void;
+  checkSession: () => Promise<boolean>;
   signOut: () => Promise<void>;
   send: (text: string) => Promise<void>;
   reloadHistory: () => Promise<void>;
