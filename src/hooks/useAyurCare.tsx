@@ -12,10 +12,12 @@ import {
   fetchHistory,
   logout as apiLogout,
   sendMessage as apiSendMessage,
+  openGoogleSignInPopup,
   startGoogleSignIn,
   type AyurUser,
   type ChatMessage,
 } from "@/lib/api";
+
 
 type AuthStatus = "checking" | "signed-in" | "signed-out";
 
