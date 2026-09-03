@@ -1,4 +1,3 @@
-import { Logo } from "./Logo";
 import { Button } from "@/components/ui/button";
 import { useAyurCare } from "@/hooks/useAyurCare";
 
@@ -20,10 +19,16 @@ export function SignedOutScreen() {
     <main className="flex min-h-screen flex-col items-center justify-center bg-background px-6 py-16">
       <div className="w-full max-w-md text-center">
         <div className="flex justify-center">
-          <Logo className="scale-110" />
+          <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary">
+            <svg viewBox="0 0 24 24" className="h-7 w-7" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M12 21c0-6 3.5-10 8-11 0 5.5-3.5 10-8 11Z" />
+              <path d="M12 21c0-4.5-2.8-8-6.5-8.8C5.5 16.6 8.2 20.3 12 21Z" />
+              <path d="M12 21v-6" />
+            </svg>
+          </span>
         </div>
 
-        <h1 className="mt-10 font-display text-4xl font-semibold text-foreground sm:text-5xl">AyurCare</h1>
+        <h1 className="mt-8 font-display text-4xl font-semibold text-foreground sm:text-5xl">AyurCare</h1>
         <p className="mx-auto mt-4 max-w-sm text-base leading-relaxed text-muted-foreground">
           Explore Ayurvedic wellness guidance through a simple conversation.
         </p>
