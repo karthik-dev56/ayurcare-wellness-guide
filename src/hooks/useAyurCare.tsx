@@ -12,10 +12,12 @@ import {
   fetchHistory,
   logout as apiLogout,
   sendMessage as apiSendMessage,
+  openGoogleSignInPopup,
   startGoogleSignIn,
   type AyurUser,
   type ChatMessage,
 } from "@/lib/api";
+
 
 type AuthStatus = "checking" | "signed-in" | "signed-out";
 
@@ -27,7 +29,10 @@ interface AyurCareState {
   historyError: boolean;
   sending: boolean;
   sendError: boolean;
+  signingIn: boolean;
+  signInError: boolean;
   signIn: () => void;
+  checkSession: () => Promise<boolean>;
   signOut: () => Promise<void>;
   send: (text: string) => Promise<void>;
   reloadHistory: () => Promise<void>;
@@ -111,6 +116,46 @@ export function AyurCareProvider({ children }: { children: ReactNode }) {
     setStatus("signed-out");
   }, []);
 
+  const [signingIn, setSigningIn] = useState(false);
+  const [signInError, setSignInError] = useState(false);
+
+  const checkSession = useCallback(async () => {
+    const me = await fetchCurrentUser();
+    if (!me) return false;
+    setUser(me);
+    setStatus("signed-in");
+    void reloadHistory();
+    return true;
+  }, [reloadHistory]);
+
+  const signIn = useCallback(() => {
+    setSignInError(false);
+    const popup = openGoogleSignInPopup();
+    if (!popup) {
+      // Popups blocked — fall back to a full-page redirect.
+      startGoogleSignIn();
+      return;
+    }
+    setSigningIn(true);
+    let elapsed = 0;
+    const timer = window.setInterval(() => {
+      elapsed += 1500;
+      void checkSession().then((ok) => {
+        if (ok) {
+          window.clearInterval(timer);
+          setSigningIn(false);
+          popup.close();
+          return;
+        }
+        if (elapsed >= 180000 || (popup.closed && elapsed >= 6000)) {
+          window.clearInterval(timer);
+          setSigningIn(false);
+          setSignInError(true);
+        }
+      });
+    }, 1500);
+  }, [checkSession]);
+
   const value = useMemo<AyurCareState>(
     () => ({
       status,
@@ -120,14 +165,18 @@ export function AyurCareProvider({ children }: { children: ReactNode }) {
       historyError,
       sending,
       sendError,
-      signIn: startGoogleSignIn,
+      signingIn,
+      signInError,
+      signIn,
+      checkSession,
       signOut,
       send,
       reloadHistory,
       startNewConversation: () => setMessages([]),
     }),
-    [status, user, messages, historyLoading, historyError, sending, sendError, signOut, send, reloadHistory],
+    [status, user, messages, historyLoading, historyError, sending, sendError, signingIn, signInError, signIn, checkSession, signOut, send, reloadHistory],
   );
+
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
