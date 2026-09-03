@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Message, MessageContent, MessageResponse } from "@/components/ai-elements/message";
 import { useAyurCare } from "@/hooks/useAyurCare";
 
 function TypingDots() {
