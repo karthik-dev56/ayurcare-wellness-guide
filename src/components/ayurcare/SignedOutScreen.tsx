@@ -13,7 +13,7 @@ function GoogleMark() {
 }
 
 export function SignedOutScreen() {
-  const { signIn } = useAyurCare();
+  const { signIn, signingIn, signInError, checkSession } = useAyurCare();
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-background px-6 py-16">
@@ -33,15 +33,39 @@ export function SignedOutScreen() {
           Explore Ayurvedic wellness guidance through a simple conversation.
         </p>
 
-        <Button size="lg" onClick={signIn} className="mt-10 h-12 w-full gap-3 rounded-full bg-card text-foreground shadow-sm ring-1 ring-border hover:bg-secondary">
+        <Button
+          size="lg"
+          onClick={signIn}
+          disabled={signingIn}
+          className="mt-10 h-12 w-full gap-3 rounded-full bg-card text-foreground shadow-sm ring-1 ring-border hover:bg-secondary"
+        >
           <GoogleMark />
-          Sign in with Google
+          {signingIn ? "Waiting for sign-in..." : "Sign in with Google"}
         </Button>
 
-        <p className="mt-5 text-sm text-muted-foreground">
-          Sign in to start a conversation and access your previous chats.
-        </p>
+        {signingIn ? (
+          <p className="mt-5 text-sm text-muted-foreground">
+            Finish signing in with Google in the other window — this page will open your chat automatically.
+          </p>
+        ) : signInError ? (
+          <div className="mt-5">
+            <p className="text-sm text-muted-foreground">
+              We couldn't confirm your sign-in yet.
+            </p>
+            <button
+              onClick={() => void checkSession()}
+              className="mt-2 text-sm font-medium text-primary underline-offset-4 hover:underline"
+            >
+              I've signed in — continue
+            </button>
+          </div>
+        ) : (
+          <p className="mt-5 text-sm text-muted-foreground">
+            Sign in to start a conversation and access your previous chats.
+          </p>
+        )}
       </div>
+
 
       <p className="mt-16 max-w-sm text-center text-xs leading-relaxed text-muted-foreground/80">
         AyurCare shares general Ayurvedic wellness information and is not a substitute for professional medical advice.
