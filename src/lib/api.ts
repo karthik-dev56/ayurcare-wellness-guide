@@ -33,10 +33,10 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 /* ---------------------------------- auth --------------------------------- */
 
 export interface AyurUser {
-  id?: string | number;
-  name?: string;
-  email?: string;
-  picture?: string;
+  id?: string | number | undefined;
+  name?: string | undefined;
+  email?: string | undefined;
+  picture?: string | undefined;
 }
 
 type MeResponse = Record<string, unknown>;
@@ -79,7 +79,7 @@ export interface ChatMessage {
   id: string;
   role: "user" | "assistant";
   content: string;
-  createdAt?: string;
+  createdAt?: string | undefined;
 }
 
 function normaliseMessage(raw: Record<string, unknown>, index: number): ChatMessage | null {
