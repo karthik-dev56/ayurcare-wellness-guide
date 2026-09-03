@@ -60,11 +60,13 @@ export function ChatPanel() {
                   </p>
                 </div>
               ) : (
-                <div key={m.id} className="flex justify-start">
-                  <p className="max-w-[92%] whitespace-pre-wrap rounded-2xl rounded-bl-md bg-card px-4 py-3 text-sm leading-relaxed text-card-foreground ring-1 ring-border">
-                    {m.content}
-                  </p>
-                </div>
+                <Message key={m.id} from="assistant">
+                  <MessageContent className="max-w-[92%] rounded-2xl rounded-bl-md bg-card px-4 py-3 text-sm leading-relaxed text-card-foreground ring-1 ring-border">
+                    <MessageResponse className="text-sm [&>ol]:list-decimal [&>ol]:pl-5 [&>ul]:list-disc [&>ul]:pl-5 [&_strong]:font-semibold">
+                      {m.content}
+                    </MessageResponse>
+                  </MessageContent>
+                </Message>
               ),
             )
           )}
