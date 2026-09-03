@@ -69,6 +69,24 @@ export function startGoogleSignIn(): void {
   window.location.href = `${API_BASE_URL}/auth/google`;
 }
 
+/**
+ * Opens Google sign-in in a popup. The backend callback currently ends on a
+ * JSON page instead of redirecting back, so we keep the app open and poll
+ * /auth/me until the session appears.
+ */
+export function openGoogleSignInPopup(): Window | null {
+  const w = 480;
+  const h = 640;
+  const left = window.screenX + Math.max(0, (window.outerWidth - w) / 2);
+  const top = window.screenY + Math.max(0, (window.outerHeight - h) / 2);
+  return window.open(
+    `${API_BASE_URL}/auth/google`,
+    "ayurcare-google-signin",
+    `width=${w},height=${h},left=${left},top=${top}`,
+  );
+}
+
+
 export async function logout(): Promise<void> {
   await request("/auth/logout", { method: "POST" });
 }
